@@ -1,26 +1,32 @@
 'use strict';
 
-require('dotenv').config();
+// 3rd party dependencies
 const express = require('express');
-const app = express();
 
+// application constants
+const app = express();
 const PORT = process.env.PORT || 3000;
 
+// this allows express to server "static files"
 app.use(express.static('./public'));
 
-app.get('/hello', (request, response) => {
-  response.status(200).send('Hello');
+// SERVER ROUTE
+app.get('/about-us', (request, response) => {
+  response.send('i am the about us webpage');
 });
 
-app.get('/data', (request, response) => {
-  let airplanes = {
-    departure: Date.now(),
-    canFly: true,
-    pilot: 'Well Trained',
-  };
-  response.status(200).json(airplanes);
+// SERVER ROUTE - simply "serves" a webpage
+app.get('/', (request, response) => {
+  response.sendFile('./public/index.html');
 });
 
-app.use('*', (request, response) => response.send('Sorry, that route does not exist.'));
+// API ROUTE - this is data that can be used to power our page (ie: programming interface)
+app.get('/api/cats/coolcat', (request, response) => {
+  response.json({ cat: { name: 'cool cat', age: 30 } })
+});
 
-app.listen(PORT,() => console.log(`Listening on port ${PORT}`));
+// sets up access for incoming traffic on a port of 3000
+app.listen(PORT, () => {
+  console.log('server up on port 3000');
+});
+
